@@ -70,6 +70,6 @@ The license is Apache 2.0, see [LICENSE](LICENSE).
 
 The Akka team created this plugin to create Maven BOM POMs for parts of the Akka toolkit.
 
-This project is community-maintained. Pull requests are very welcome –- thanks in advance!
+This project is community-maintained. Pull requests are very welcome –- thanks in advance! Contributors need to agree to the [Lightbend Contributor License Agreement - CLA](https://www.lightbend.com/contribute/cla) before we can merge a contribution.
 
 **Lightbend does not offer support for this project.**
