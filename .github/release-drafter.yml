@@ -1,0 +1,22 @@
+# Config for https://github.com/release-drafter/release-drafter
+name-template: '$NEXT_PATCH_VERSION'
+tag-template: 'v$NEXT_PATCH_VERSION'
+
+#categories:
+#  - title: ':rocket: Features'
+#    labels:
+#      - 'feature'
+#
+#  - title: ':dart: Dependencies'
+#    labels:
+#      - 'dependencies'
+
+template: |
+  # :mega: Version $NEXT_PATCH_VERSION released!
+
+  ## :green_book: What’s Changed
+  $CHANGES
+  ## :bow: Credits
+  Special thanks to the following contributors who helped with this release: $CONTRIBUTORS
+
+change-template: '- $TITLE #$NUMBER by [@$AUTHOR](https://github.com/$AUTHOR)'

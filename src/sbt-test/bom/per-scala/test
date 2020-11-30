@@ -1,0 +1,4 @@
+> +billOfMaterials/publishM2
+
+$ must-mirror billOfMaterials/target/scala-2.13/sample-library-bom_2.13-4.3.2.1.pom expected/expected-2.13-pom.xml
+$ must-mirror billOfMaterials/target/scala-2.12/sample-library-bom_2.12-4.3.2.1.pom expected/expected-2.12-pom.xml

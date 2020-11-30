@@ -1,0 +1,26 @@
+version: ~> 1.0
+
+language: scala
+jdk: openjdk8
+scala:
+  - 2.12.10
+
+jobs:
+  include:
+    - stage: publish
+      script: sbt "^publish"
+      name: "Publish"
+
+stages:
+  - name: publish
+    if: NOT fork AND tag =~ ^v
+
+cache:
+  directories:
+    - $HOME/.cache/coursier
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+
+before_cache:
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete

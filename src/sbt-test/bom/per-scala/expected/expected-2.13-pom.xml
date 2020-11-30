@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.lightbend</groupId>
+    <artifactId>sample-library-bom_2.13</artifactId>
+    <packaging>pom</packaging>
+    <description>sample-library-bom</description>
+    <version>4.3.2.1</version>
+    <name>sample-library-bom</name>
+    <organization>
+        <name>com.lightbend</name>
+    </organization>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.lightbend</groupId>
+                <artifactId>scripted-core_2.13</artifactId>
+                <version>4.3.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lightbend</groupId>
+                <artifactId>scripted-java</artifactId>
+                <version>4.3.2.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
