@@ -1,2 +1,2 @@
-Create a separte BOM per Scala minor version.
+Create a separate BOM per Scala minor version.
 
