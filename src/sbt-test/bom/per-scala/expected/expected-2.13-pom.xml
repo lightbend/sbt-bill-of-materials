@@ -17,6 +17,7 @@
                 <artifactId>scripted-core_2.13</artifactId>
                 <version>4.3.2.1</version>
             </dependency>
+            <!-- testing-plugin is not available for Scala 2.13 -->
             <dependency>
                 <groupId>com.lightbend</groupId>
                 <artifactId>scripted-java</artifactId>
