@@ -47,7 +47,7 @@ object BillOfMaterialsPlugin extends AutoPlugin {
         val dependencies =
           Def.settingDyn {
             val multipleScalaVersionsInBom = crossVersion.value == CrossVersion.disabled
-            val desiredScalaVersion = scalaVersion.value
+            val desiredScalaBinaryVersion = CrossVersion.binaryScalaVersion(scalaVersion.value)
             (bomIncludeProjects.value).map { project =>
               Def.setting {
                 val artifactName = (project / artifact).value.name
@@ -59,11 +59,11 @@ object BillOfMaterialsPlugin extends AutoPlugin {
                 } else if (crossBuild == CrossVersion.binary) {
                   if (multipleScalaVersionsInBom) {
                     (project / crossScalaVersions).value.map { scalaV =>
-                      toXmlScalaBinary(artifactName, org, ver, scalaV, scalaV)
+                      toXmlScalaBinary(artifactName, org, ver, scalaV)
                     }
                   } else {
                     val scalaV = (project / scalaVersion).value
-                    toXmlScalaBinary(artifactName, org, ver, scalaV, desiredScalaVersion)
+                    toXmlIfDesiredVersion(artifactName, org, ver, scalaV, desiredScalaBinaryVersion)
                   }
                 } else {
                   throw new RuntimeException(s"Support for `crossVersion := $crossBuild` is not implemented")
@@ -85,13 +85,17 @@ object BillOfMaterialsPlugin extends AutoPlugin {
       // This disables creating jar, source jar and javadocs, and will cause the packaging type to be "pom" when the pom is created
       Classpaths.defaultPackageKeys.map(_ / publishArtifact := false)
 
-  private def toXmlScalaBinary(artifactName: String, organization: String, version: String, scalaVersion: String, desiredScalaVersion: String): Node = {
-    if (scalaVersion == desiredScalaVersion) {
-      val crossFunc = CrossVersion(Binary(), scalaVersion, CrossVersion.binaryScalaVersion(scalaVersion)).get
-      // convert artifactName to match the desired scala version
-      val artifactId = crossFunc(artifactName)
-      toXml(artifactId, organization, version)
-    } else Comment(s" $artifactName is not available for $scalaVersion ")
+  private def toXmlIfDesiredVersion(artifactName: String, organization: String, version: String, scalaVersion: String, desiredScalaBinaryVersion: String): Node = {
+    if (CrossVersion.binaryScalaVersion(scalaVersion) == desiredScalaBinaryVersion) {
+      toXmlScalaBinary(artifactName, organization, version, scalaVersion)
+    } else Comment(s" $artifactName is not available for Scala $desiredScalaBinaryVersion ")
+  }
+
+  private def toXmlScalaBinary(artifactName: String, organization: String, version: String, scalaVersion: String) = {
+    val crossFunc = CrossVersion(Binary(), scalaVersion, CrossVersion.binaryScalaVersion(scalaVersion)).get
+    // convert artifactName to match the desired scala version
+    val artifactId = crossFunc(artifactName)
+    toXml(artifactId, organization, version)
   }
 
   private def toXml(artifactId: String, organization: String, version: String): Node = {
