@@ -23,6 +23,8 @@ import scala.xml.Elem
 trait BillOfMaterialsPluginKeys {
   val bomIncludeProjects =
     settingKey[Seq[ProjectReference]]("the list of projects to include in the Bill of Materials pom.xml")
+  val bomIncludeModules =
+    settingKey[Seq[ModuleID]]("the list of 3rd party libraries to include in the Bill of Materials pom.xml")
   val bomDependenciesListing =
     settingKey[Elem]("the generated `<dependencyManagement>` section to be added to `sbt.pomExtra`")
 }
