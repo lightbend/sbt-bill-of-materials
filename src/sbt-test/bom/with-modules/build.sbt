@@ -16,7 +16,7 @@ lazy val billOfMaterials = project
     name := "framework-sample-bom",
     // Just one BOM including all cross Scala versions
     crossVersion := CrossVersion.disabled,
-    // Create BOM in the 2.13 run
+    // Create BOM in the first run
     crossScalaVersions := crossScalaVersions.value.take(1),
     bomIncludeModules  := Seq("com.typesafe.akka" %% "akka-actor-typed" % "2.6.13"),
     // added for testing only
