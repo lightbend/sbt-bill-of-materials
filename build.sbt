@@ -37,8 +37,8 @@ description := "Create 'Bill of Materials' (BOM) POM files from sbt for consumpt
 sources in (Compile, doc) := Seq.empty
 publishArtifact in (Compile, packageDoc) := false
 
-bintrayOrganization := Some("sbt")
-bintrayRepository := "sbt-plugin-releases"
+publishTo := sonatypePublishToBundle.value
+publishMavenStyle := true
 
 enablePlugins(AutomateHeaderPlugin)
 scalafmtOnCompile := true
