@@ -16,12 +16,10 @@
 
 package com.lightbend.sbt.billofmaterials
 
-import scala.xml.Comment
-import scala.xml.Node
-import sbt.AutoPlugin
 import sbt.Keys._
-import sbt.PluginTrigger
-import sbt._
+import sbt.{ AutoPlugin, PluginTrigger, _ }
+
+import scala.xml.{ Comment, Node }
 
 /**
  * Plugin to create a Maven Bill of Materials (BOM) pom.xml
@@ -43,33 +41,41 @@ object BillOfMaterialsPlugin extends AutoPlugin {
       // publish Maven Style
       publishMavenStyle := true,
       autoScalaLibrary := false,
+      bomIncludeProjects := Seq.empty[ProjectReference],
+      bomIncludeModules := Seq.empty[ModuleID],
       bomDependenciesListing := {
         val dependencies =
           Def.settingDyn {
             val multipleScalaVersionsInBom = crossVersion.value == CrossVersion.disabled
             val desiredScalaBinaryVersion = CrossVersion.binaryScalaVersion(scalaVersion.value)
-            (bomIncludeProjects.value).map { project =>
+            ((bomIncludeProjects.value).map { project =>
               Def.setting {
-                val artifactName = (project / artifact).value.name
-                val org = (project / organization).value
-                val ver = (project / version).value
-                val crossBuild = (project / crossVersion).value
-                if (crossBuild == CrossVersion.disabled) {
-                  toXml(artifactName, org, ver)
-                } else if (crossBuild == CrossVersion.binary) {
-                  if (multipleScalaVersionsInBom) {
-                    (project / crossScalaVersions).value.map { scalaV =>
-                      toXmlScalaBinary(artifactName, org, ver, scalaV)
-                    }
-                  } else {
-                    val scalaV = (project / scalaVersion).value
-                    toXmlIfDesiredVersion(artifactName, org, ver, scalaV, desiredScalaBinaryVersion)
-                  }
-                } else {
-                  throw new RuntimeException(s"Support for `crossVersion := $crossBuild` is not implemented")
-                }
+                val module = ModuleID(
+                  organization = (project / organization).value,
+                  name = (project / artifact).value.name,
+                  revision = (project / version).value
+                ).withCrossVersion((project / crossVersion).value)
+
+                toXml(
+                  module,
+                  multipleScalaVersionsInBom,
+                  desiredScalaBinaryVersion,
+                  moduleScalaVersion = Option((project / scalaVersion).value),
+                  crossScalaVersions = (project / crossScalaVersions).value
+                )
               }
-            }.join
+            } ++
+            (bomIncludeModules.value).map { moduleId =>
+              Def.setting {
+                toXml(
+                  moduleId,
+                  multipleScalaVersionsInBom,
+                  desiredScalaBinaryVersion,
+                  moduleScalaVersion = None,
+                  crossScalaVersions = crossScalaVersions.value
+                )
+              }
+            }).join
           }.value
 
         // format: off
@@ -98,6 +104,28 @@ object BillOfMaterialsPlugin extends AutoPlugin {
     toXml(artifactId, organization, version)
   }
 
+  private def toXml(
+                    module: ModuleID,
+                    multipleScalaVersionsInBom: Boolean,
+                    desiredScalaBinaryVersion: String,
+                    moduleScalaVersion: Option[String],
+                    crossScalaVersions: Seq[String]): Seq[Node] = {
+    import module._
+    if (crossVersion == CrossVersion.disabled) {
+      toXml(name, organization, revision)
+    } else if (crossVersion == CrossVersion.binary) {
+      if (multipleScalaVersionsInBom) {
+        crossScalaVersions.map(scalaV => toXmlScalaBinary(name, organization, revision, scalaV))
+      } else {
+        moduleScalaVersion
+          .map(scalaV => toXmlIfDesiredVersion(name, organization, revision, scalaV, desiredScalaBinaryVersion))
+          .getOrElse(toXmlScalaBinary(name, organization, revision, desiredScalaBinaryVersion))
+      }
+    } else {
+      throw new RuntimeException(s"Support for `crossVersion := $crossVersion` is not implemented")
+    }
+  }
+
   private def toXml(artifactId: String, organization: String, version: String): Node = {
     <dependency>
       <groupId>{organization}</groupId>
@@ -105,5 +133,4 @@ object BillOfMaterialsPlugin extends AutoPlugin {
       <version>{version}</version>
     </dependency>
   }
-
 }

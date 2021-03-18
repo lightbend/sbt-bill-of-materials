@@ -50,9 +50,9 @@ lazy val billOfMaterials = project
     name := "framework-sample-bom",
     // Just one BOM including all cross Scala versions
     crossVersion := CrossVersion.disabled,
-    // Create BOM in the first runn
+    // Create BOM in the first run
     crossScalaVersions := crossScalaVersions.value.take(1),
-    bomIncludeProjects := Seq(core),
+    bomIncludeProjects := Seq(core)
   )
 ``` 
 
@@ -60,6 +60,19 @@ Create the BOM pom.xml files with:
 
 ```
 sbt billOfMaterials/publishM2
+```
+
+### Create a single BOM that includes 3rd party libraries
+
+The `bomIncludeModules` setting can be used with or without `bomIncludeProjects`.
+
+```
+lazy val billOfMaterials = project
+  .enablePlugins(BillOfMaterialsPlugin)
+  .settings(
+    name := "framework-sample-bom",
+    bomIncludeModules := Seq("com.typesafe.akka" %% "akka-actor-typed" % "2.6.13"),
+  )
 ```
 
 ## License
