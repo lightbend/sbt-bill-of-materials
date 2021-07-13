@@ -1,4 +1,4 @@
-# sbt-bill-of-materials [![bintray-badge](https://api.bintray.com/packages/sbt/sbt-plugin-releases/sbt-bill-of-materials/images/download.svg)](https://bintray.com/sbt/sbt-plugin-releases/sbt-bill-of-materials)
+# sbt-bill-of-materials 
 
 A sbt plugin to generate Bill of Materials (BOM) pom.xml for use with Maven or Gradle.
 
