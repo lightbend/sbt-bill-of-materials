@@ -1,4 +1,4 @@
-scalaVersion := "2.12.10"
+scalaVersion := "2.12.17"
 
 sbtPlugin := true
 
@@ -34,7 +34,7 @@ startYear := Some(2020)
 description := "Create 'Bill of Materials' (BOM) POM files from sbt for consumption in Maven and Gradle."
 
 // no API docs
-sources in (Compile, doc) := Seq.empty
+Compile / doc / sources := Seq.empty
 
 sonatypeProfileName := "com.lightbend"
 publishTo := sonatypePublishToBundle.value
