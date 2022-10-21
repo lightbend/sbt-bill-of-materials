@@ -14,7 +14,7 @@ lazy val billOfMaterials = project
   .enablePlugins(BillOfMaterialsPlugin)
   .settings(
     name := "framework-sample-bom",
-    bomIncludeModules := Seq("com.typesafe.akka" %% "akka-actor-typed" % "2.6.13"),
+    bomIncludeModules := Seq("com.typesafe.akka" %% "akka-actor-typed" % "2.6.20"),
     crossVersion := CrossVersion.disabled,
     // added for testing only
     publishM2Configuration := publishM2Configuration.value.withOverwrite(true)

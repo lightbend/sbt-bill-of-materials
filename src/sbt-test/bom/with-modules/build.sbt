@@ -18,7 +18,7 @@ lazy val billOfMaterials = project
     crossVersion := CrossVersion.disabled,
     // Create BOM in the first run
     crossScalaVersions := crossScalaVersions.value.take(1),
-    bomIncludeModules  := Seq("com.typesafe.akka" %% "akka-actor-typed" % "2.6.13"),
+    bomIncludeModules := Seq("com.typesafe.akka" %% "akka-actor-typed" % "2.6.20"),
     // added for testing only
     publishM2Configuration := publishM2Configuration.value.withOverwrite(true)
   )
