@@ -1,0 +1,30 @@
+name: Release
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Cache Coursier cache
+        uses: coursier/cache-action@v6
+
+      - name: Set up JDK 11
+        uses: coursier/setup-action@v1
+        with:
+          jvm:
+            adopt:11
+
+      - name: Cut release
+        run: sbt ci-release
+        environment: releasing
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          PGP_SECRET: ${{ secrets.PGP_SECRET }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
