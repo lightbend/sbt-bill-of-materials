@@ -1,8 +1,9 @@
 name: Release
+
 on:
   push:
-    branches: [main]
     tags: ["v*"]
+
 jobs:
   publish:
     if: github.repository == 'lightbend/sbt-bill-of-materials'
