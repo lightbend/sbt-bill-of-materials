@@ -1,16 +1,17 @@
 name: Build and Test
 on:
   push:
-    branches: [main]
-  pull_request_target:
-    branches: [main]
+    branches:
+      - main
+    tags-ignore: [ v.* ]
+  pull_request:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 100
@@ -18,13 +19,14 @@ jobs:
       - name: Fetch tags
         run: git fetch --depth=100 origin +refs/tags/*:refs/tags/*
 
-      - name: Set up JDK 11
-        uses: olafurpg/setup-scala@v10
-        with:
-          java-version: adopt@1.11.0-9
-
       - name: Cache Coursier cache
-        uses: coursier/cache-action@v5
+        uses: coursier/cache-action@v6
+
+      - name: Set up JDK 11
+        uses: coursier/setup-action@v1
+        with:
+            jvm:
+              adopt:11
 
       - name: sbt test
         run: sbt --client ^test
