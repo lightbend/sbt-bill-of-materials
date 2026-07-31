@@ -26,6 +26,7 @@ jobs:
         uses: coursier/setup-action@v3
         with:
           jvm: adopt:11
+          apps: sbt
 
       - name: sbt test
         run: sbt --client ^test

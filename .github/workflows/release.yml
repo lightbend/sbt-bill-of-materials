@@ -21,6 +21,7 @@ jobs:
         uses: coursier/setup-action@v3
         with:
           jvm: adopt:11
+          apps: sbt
 
       - name: Cut release
         run: sbt ci-release
