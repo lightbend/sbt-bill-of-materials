@@ -4,9 +4,7 @@ The `main` branch is the base for regular releases.
 
 ## Cutting the release
 
-GitHub workflows publish releases to the [Sonatype Central Portal](https://central.sonatype.com/).
-
-The `SONATYPE_USERNAME` / `SONATYPE_PASSWORD` GitHub secrets must be a Central Portal user token generated at https://central.sonatype.com/account (the account must own the `com.lightbend` namespace). 
+GitHub workflows publish releases to Sonatype.
 
 ### Requires contributor access
 
