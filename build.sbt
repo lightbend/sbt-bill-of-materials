@@ -36,8 +36,6 @@ description := "Create 'Bill of Materials' (BOM) POM files from sbt for consumpt
 // no API docs
 Compile / doc / sources := Seq.empty
 
-sonatypeProfileName := "com.lightbend"
-publishTo := sonatypePublishToBundle.value
 publishMavenStyle := true
 
 enablePlugins(AutomateHeaderPlugin)
