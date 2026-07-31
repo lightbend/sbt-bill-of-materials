@@ -7,21 +7,21 @@ on:
 jobs:
   publish:
     if: github.repository == 'lightbend/sbt-bill-of-materials'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     environment: releasing
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Cache Coursier cache
-        uses: coursier/cache-action@v6
+        uses: coursier/cache-action@v8
 
       - name: Set up JDK 11
-        uses: coursier/setup-action@v1
+        uses: coursier/setup-action@v3
         with:
-          jvm:
-            adopt:11
+          jvm: adopt:11
+          apps: sbt
 
       - name: Cut release
         run: sbt ci-release

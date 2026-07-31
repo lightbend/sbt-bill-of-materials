@@ -115,7 +115,13 @@ object BillOfMaterialsPlugin extends AutoPlugin {
       toXml(name, organization, revision)
     } else if (crossVersion == CrossVersion.binary) {
       if (multipleScalaVersionsInBom) {
-        crossScalaVersions.map(scalaV => toXmlScalaBinary(name, organization, revision, scalaV))
+        crossScalaVersions.map(scalaV => {
+          toXmlScalaBinary(name, organization, revision, {
+            // Scala 3+ libraries don't show the minor version
+            if (scalaV.startsWith("2.")) scalaV
+            else scalaV.takeWhile(_ != '.')
+          })
+        })
       } else {
         moduleScalaVersion
           .map(scalaV => toXmlIfDesiredVersion(name, organization, revision, scalaV, desiredScalaBinaryVersion))
