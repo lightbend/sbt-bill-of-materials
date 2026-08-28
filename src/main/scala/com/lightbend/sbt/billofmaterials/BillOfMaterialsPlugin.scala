@@ -26,8 +26,8 @@ import scala.xml.{ Comment, Node }
  *
  * Set `crossVersion := CrossVersion.disabled` to create a single BOM with all Scala binary versions.
  *
- * - https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms
- * - https://howtodoinjava.com/maven/maven-bom-bill-of-materials-dependency/
+ *   - https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms
+ *   - https://howtodoinjava.com/maven/maven-bom-bill-of-materials-dependency/
  */
 object BillOfMaterialsPlugin extends AutoPlugin {
 
