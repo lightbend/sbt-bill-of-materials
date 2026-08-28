@@ -1,42 +1,52 @@
-scalaVersion := "2.12.21"
+import scala.jdk.CollectionConverters.*
 
-sbtPlugin := true
+lazy val scala212 = "2.12.21"
+lazy val scala3 = "3.8.4"
 
-enablePlugins(SbtPlugin)
-import scala.collection.JavaConverters._
-scriptedLaunchOpts += s"-Dproject.version=${version.value}"
-scriptedLaunchOpts ++= java.lang.management.ManagementFactory.getRuntimeMXBean.getInputArguments.asScala.filter(a =>
-  Seq("-Xmx", "-Xms", "-XX", "-Dfile").exists(a.startsWith)
-)
-scriptedBufferLog := false
-
-crossSbtVersions := List("1.1.0")
-organization := "com.lightbend.sbt"
-name := "sbt-bill-of-materials"
-
-licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
-homepage := Some(url("https://github.com/lightbend/sbt-bill-of-materials"))
-scmInfo := Some(
-  ScmInfo(
-    url("https://github.com/lightbend/sbt-bill-of-materials"),
-    "git@github.com:lightbend/sbt-bill-of-materials.git"
+lazy val sbtBillOfMaterials = rootProject
+  .enablePlugins(SbtPlugin, AutomateHeaderPlugin)
+  .settings(
+    sbtPlugin := true,
+    crossScalaVersions := Seq(scala212, scala3),
+    scriptedLaunchOpts += s"-Dproject.version=${version.value}",
+    scriptedLaunchOpts ++= java.lang.management.ManagementFactory.getRuntimeMXBean.getInputArguments.asScala.toSeq
+      .filter(a => Seq("-Xmx", "-Xms", "-XX", "-Dfile").exists(a.startsWith)),
+    scriptedBufferLog := false,
+    (pluginCrossBuild / sbtVersion) := {
+      scalaBinaryVersion.value match {
+        case "2.12" => "1.1.0"
+        case _      => "2.0.8"
+      }
+    },
+    organization := "com.lightbend.sbt",
+    name := "sbt-bill-of-materials",
+    scalacOptions ++= Seq(
+      "-release",
+      scalaBinaryVersion.value match {
+        case "2.12" => "8"
+        case _      => "17" // sbt 2.x only supports Java 17+
+      }
+    ),
+    licenses += ("Apache-2.0", uri("http://www.apache.org/licenses/LICENSE-2.0")),
+    homepage := Some(uri("https://github.com/lightbend/sbt-bill-of-materials")),
+    scmInfo := Some(
+      ScmInfo(
+        uri("https://github.com/lightbend/sbt-bill-of-materials"),
+        "git@github.com:lightbend/sbt-bill-of-materials.git"
+      )
+    ),
+    developers += Developer(
+      "contributors",
+      "Contributors",
+      "info@lightbend.com",
+      uri("https://github.com/lightbend/sbt-bill-of-materials/graphs/contributors")
+    ),
+    organizationName := "Lightbend Inc.",
+    organizationHomepage := Some(uri("https://www.lightbend.com")),
+    startYear := Some(2020),
+    description := "Create 'Bill of Materials' (BOM) POM files from sbt for consumption in Maven and Gradle.",
+    // no API docs
+    Compile / doc / sources := Seq.empty,
+    publishMavenStyle := true,
+    scalafmtOnCompile := true
   )
-)
-developers += Developer(
-  "contributors",
-  "Contributors",
-  "info@lightbend.com",
-  url("https://github.com/lightbend/sbt-bill-of-materials/graphs/contributors")
-)
-organizationName := "Lightbend Inc."
-organizationHomepage := Some(url("https://www.lightbend.com"))
-startYear := Some(2020)
-description := "Create 'Bill of Materials' (BOM) POM files from sbt for consumption in Maven and Gradle."
-
-// no API docs
-Compile / doc / sources := Seq.empty
-
-publishMavenStyle := true
-
-enablePlugins(AutomateHeaderPlugin)
-scalafmtOnCompile := true

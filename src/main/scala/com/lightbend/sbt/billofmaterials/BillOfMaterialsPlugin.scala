@@ -16,8 +16,8 @@
 
 package com.lightbend.sbt.billofmaterials
 
-import sbt.Keys._
-import sbt.{ AutoPlugin, PluginTrigger, _ }
+import sbt.Keys.*
+import sbt.*
 
 import scala.xml.{ Comment, Node }
 
@@ -26,17 +26,17 @@ import scala.xml.{ Comment, Node }
  *
  * Set `crossVersion := CrossVersion.disabled` to create a single BOM with all Scala binary versions.
  *
- * - https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms
- * - https://howtodoinjava.com/maven/maven-bom-bill-of-materials-dependency/
+ *   - https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms
+ *   - https://howtodoinjava.com/maven/maven-bom-bill-of-materials-dependency/
  */
 object BillOfMaterialsPlugin extends AutoPlugin {
 
   override def trigger = PluginTrigger.NoTrigger
 
   object autoImport extends BillOfMaterialsPluginKeys
-  import autoImport._
+  import autoImport.*
 
-  override def projectSettings: Seq[Def.Setting[_]] =
+  override def projectSettings: Seq[Def.Setting[?]] =
     Seq(
       // publish Maven Style
       publishMavenStyle := true,
@@ -48,7 +48,7 @@ object BillOfMaterialsPlugin extends AutoPlugin {
           Def.settingDyn {
             val multipleScalaVersionsInBom = crossVersion.value == CrossVersion.disabled
             val desiredScalaBinaryVersion = CrossVersion.binaryScalaVersion(scalaVersion.value)
-            ((bomIncludeProjects.value).map { project =>
+            (bomIncludeProjects.value.map { project =>
               Def.setting {
                 val module = ModuleID(
                   organization = (project / organization).value,
@@ -65,7 +65,7 @@ object BillOfMaterialsPlugin extends AutoPlugin {
                 )
               }
             } ++
-            (bomIncludeModules.value).map { moduleId =>
+            bomIncludeModules.value.map { moduleId =>
               Def.setting {
                 toXml(
                   moduleId,
@@ -86,7 +86,7 @@ object BillOfMaterialsPlugin extends AutoPlugin {
         </dependencyManagement>
         // format:on
       },
-      pomExtra := (pomExtra.value) :+ bomDependenciesListing.value
+      pomExtra := pomExtra.value :+ bomDependenciesListing.value
     ) ++
       // This disables creating jar, source jar and javadocs, and will cause the packaging type to be "pom" when the pom is created
       Classpaths.defaultPackageKeys.map(_ / publishArtifact := false)
@@ -110,7 +110,7 @@ object BillOfMaterialsPlugin extends AutoPlugin {
                     desiredScalaBinaryVersion: String,
                     moduleScalaVersion: Option[String],
                     crossScalaVersions: Seq[String]): Seq[Node] = {
-    import module._
+    import module.*
     if (crossVersion == CrossVersion.disabled) {
       toXml(name, organization, revision)
     } else if (crossVersion == CrossVersion.binary) {
