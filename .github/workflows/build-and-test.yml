@@ -22,14 +22,14 @@ jobs:
       - name: Cache Coursier cache
         uses: coursier/cache-action@v8
 
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: coursier/setup-action@v3
         with:
-          jvm: adopt:11
+          jvm: adopt:17
           apps: sbt
 
       - name: sbt test
-        run: sbt --client ^test
+        run: sbt --client +test
 
       - name: sbt scripted
-        run: sbt --client '^scripted bom/*'
+        run: sbt --client +scripted
