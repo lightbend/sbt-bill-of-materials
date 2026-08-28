@@ -1,4 +1,6 @@
-scalaVersion := "2.12.21"
+lazy val scala212 = "2.12.21"
+lazy val scala3 = "3.8.4"
+crossScalaVersions := Seq(scala212, scala3)
 
 sbtPlugin := true
 
@@ -10,9 +12,22 @@ scriptedLaunchOpts ++= java.lang.management.ManagementFactory.getRuntimeMXBean.g
 )
 scriptedBufferLog := false
 
-crossSbtVersions := List("1.1.0")
+(pluginCrossBuild / sbtVersion) := {
+  scalaBinaryVersion.value match {
+    case "2.12" => "1.1.0"
+    case _      => "2.0.8"
+  }
+}
 organization := "com.lightbend.sbt"
 name := "sbt-bill-of-materials"
+
+scalacOptions ++= Seq(
+  "-release",
+  scalaBinaryVersion.value match {
+    case "2.12" => "8"
+    case _      => "17" // sbt 2.x only supports Java 17+
+  }
+)
 
 licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 homepage := Some(url("https://github.com/lightbend/sbt-bill-of-materials"))

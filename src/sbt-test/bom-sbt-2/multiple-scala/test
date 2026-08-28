@@ -1,0 +1,6 @@
+> +billOfMaterials/publishM2
+
+$ must-mirror target/out/jvm/scala-2.13.4/framework-sample-bom/framework-sample-bom-4.3.2.1.pom expected/expected-pom.xml
+
+# BOM is not cross-built
+$ absent target/out/jvm/scala-2.12.11/framework-sample-bom/framework-sample-bom-4.3.2.1.pom
